@@ -64,6 +64,40 @@ const getLocal = async (id) => {
     return data.item;
 }
 
+const getDishes = async (q="", category="", dateFrom="", dateTo="", zone="", localId="") => {
+    const response = await fetch(`${URL}/api/dishes?q=${q}&category=${category}&dateFrom=${dateFrom}&dateTo=${dateTo}&zone=${zone}&localId=${localId}`, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+    })
+
+    const data = await response.json();
+
+    return data.items;
+}
+
+const addDish = async (name, category, localId, city, price, description) => {
+    const response = await fetch(`${URL}/api/dishes`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json", 'Authorization' : `Bearer ${localStorage.getItem("token")}`},
+        body: JSON.stringify({name, category, localId, city, price, description})
+    })
+
+    const data = await response.json();
+
+    console.log("[INFO : ADD DISH]   ", data);
+}
+
+const getDish = async (id) => {
+    const response = await fetch(`${URL}/api/dishes/${id}`, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+    })
+
+    const data = await response.json();
+
+    return data.item;
+}
+
 const postReview = async (localId, rating, comment) => {
     const response = await fetch(`${URL}/api/locals/${localId}/reviews`, {
         method: "POST",
@@ -82,5 +116,8 @@ export {
     getLocals,
     addLocal,
     getLocal,
+    getDishes,
+    addDish,
+    getDish,
     postReview
 }
