@@ -116,6 +116,18 @@ const postLocalReview = async (localId, rating, comment) => {
     console.log("[INFO : POST LOCAL REVIEW]   ", data);
 }
 
+const postDishReview = async (dishId, rating, comment) => {
+    const response = await fetch(`${URL}/api/dishes/${dishId}/reviews`, {
+        method: "POST",
+        headers: {"Content-Type" : "application/json", 'Authorization' : `Bearer ${localStorage.getItem("token")}`},
+        body: JSON.stringify({rating, comment})
+    })
+
+    const data = await response.json();
+
+    console.log("[INFO : POST DISH REVIEW]   ", data);
+}
+
 const getLocalReviews = async (id) => {
     const response = await fetch(`${URL}/api/locals/${id}/reviews`, {
         method: "GET",
@@ -125,6 +137,19 @@ const getLocalReviews = async (id) => {
     const data = await response.json();
 
     console.log("[INFO : GET LOCAL REVIEWS]   ", data);
+
+    return data.items;
+}
+
+const getDishReviews = async (id) => {
+    const response = await fetch(`${URL}/api/dishes/${id}/reviews`, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+    })
+
+    const data = await response.json();
+
+    console.log("[INFO : GET DISH REVIEWS]   ", data);
 
     return data.items;
 }
@@ -152,6 +177,8 @@ export {
     addDish,
     getDish,
     postLocalReview,
+    postDishReview,
     getLocalReviews,
+    getDishReviews,
     getUser
 }

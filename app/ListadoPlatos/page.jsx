@@ -93,12 +93,10 @@ export default function ListadoPrincipal() {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {dishes?.map((dish) => (
+            <Link key={dish.id} href={`/DetallePlato/${dish.id}`} className="group block">
               <div key={dish.id} className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div className="flex flex-1 flex-col p-5 bg-white relative z-10">
                   <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{dish.name}</h3>
-                  <Link href={`/DetalleLocal/${dish.localId}`} className="text-sm text-indigo-600 hover:text-indigo-800">
-                    {dish.local.name}
-                  </Link>
                   <p className="mt-1 text-sm text-gray-500">{dish.description}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700">
@@ -107,10 +105,11 @@ export default function ListadoPrincipal() {
                     <span className="text-sm font-bold text-gray-700 bg-gray-100 px-2 py-1 rounded-md">${dish.price}</span>
                   </div>
                   <span className="text-sm text-gray-500 italic mt-2">
-                    Creado el {dish.createdAt?.split('T')[0]} por <UserLink userName={dish.creator.name} userId={dish.creator.id} />
+                    Creado el {dish.createdAt?.split('T')[0]}
                   </span>
                 </div>
               </div>
+            </Link>
           ))}
           {(!dishes || dishes.length === 0) && (
             <div className="col-span-full py-20 text-center">

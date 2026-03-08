@@ -16,9 +16,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const token = localStorage.setItem("token", "");
-    const name = localStorage.setItem("name", "");
-    const id = localStorage.setItem("id", "");
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("id");
     window.dispatchEvent(new Event('cambioSesion'));
   }, []);
 

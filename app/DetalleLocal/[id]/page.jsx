@@ -100,10 +100,15 @@ export default function DetalleLocal() {
                                     <p className="text-gray-600 leading-relaxed">{local.address}</p>
                                 </div>
                             </div>
-                            <div className="pl-8">
-                                <p className="text-sm font-bold text-gray-500 mb-4">
-                                    Creado por: <UserLink userName={local.creator.name} userId={local.creator.id} />
-                                </p>
+                            <div className="flex flex-wrap gap-4 m-5 pt-6 border-t border-gray-100">
+                                {local.creator && (
+                                    <div className="inline-flex items-center gap-2 rounded-xl bg-gray-50 px-5 py-3 text-sm font-medium text-gray-700 border border-gray-100">
+                                        <span>Creado por:</span>
+                                        <span className="font-bold text-indigo-600">
+                                            <UserLink userName={local.creator.name} userId={local.creator.id} />
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -137,14 +142,17 @@ export default function DetalleLocal() {
                         )}
 
                         <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
-                            <h3 className="text-2xl font-black text-gray-900 mb-6">Lo que dicen los clientes</h3>
-                            {local.ratingCount !== 0 && (
-                                <>
-                                    <Rating value={Math.round(local.ratingAverage)} readonly/>
-                                    <p className="text-gray-500 italic mb-6">({local.ratingAverage.toFixed(1)}/5.0 de {local.ratingCount} reseñas)</p>
-                                </>
-                            )}
-                            
+                            <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
+                                <h3 className="text-2xl font-bold text-gray-900">Reseñas</h3>
+                                {local.reviews?.length > 0 && (
+                                    <div className="flex items-center gap-2">
+                                        <Rating value={Math.round(local.ratingAverage)} readonly />
+                                        <span className="text-sm font-medium text-gray-500">
+                                            ({local.ratingAverage.toFixed(1)} de {local.reviews.length})
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                             <ListadoRating localId={id} />
                         </div>
                     </div>

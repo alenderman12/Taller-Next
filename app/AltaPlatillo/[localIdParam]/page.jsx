@@ -6,7 +6,7 @@ import { addDish } from "../../../api/api"
 import { getLocals } from '../../../api/api';
 import { useRouter, useParams } from 'next/navigation';
 
-const AltaLocal = () => {
+const AltaPlatillo = () => {
     const { localIdParam } = useParams();
     const [name , setName] = useState("");
     const [category , setCategory] = useState("");
@@ -61,10 +61,10 @@ const AltaLocal = () => {
           </div>
 
           <div>
-            <label htmlFor="price-range" className="block text-sm font-semibold text-gray-900 mb-2">Categoria</label>
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-900 mb-2">Categoria</label>
             <div className="relative">
               <select
-                id="price-range" name="price-range" onChange={(e) => setCategory(e.target.value)}
+                id="category" name="category" onChange={(e) => setCategory(e.target.value)}
                 className="block w-full appearance-none rounded-xl border-0 py-3 pl-4 pr-10 text-gray-900 bg-gray-50 ring-1 ring-inset ring-gray-200 focus:bg-white focus:ring-2 focus:ring-indigo-600 transition-all sm:text-sm"
               >
                 <option value="">Seleccionar...</option>
@@ -79,7 +79,7 @@ const AltaLocal = () => {
           </div>
           
           <div>
-            <label htmlFor="price-range" className="block text-sm font-semibold text-gray-900 mb-2">Local</label>
+            <label htmlFor="local" className="block text-sm font-semibold text-gray-900 mb-2">Local</label>
             <select
               id="local"
               value={localId}
@@ -133,4 +133,4 @@ const AltaLocal = () => {
     );
 }
 
-export default AltaLocal;
+export default AltaPlatillo;
