@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { postReview } from "../api/api";
+import { postLocalReview } from "../api/api";
 
 export default function RestaurantRating({ local , setIsPosted }) {
   const [rating, setRating] = useState(0);
@@ -17,7 +17,7 @@ export default function RestaurantRating({ local , setIsPosted }) {
 
   const handleSubmit = async () => {
     if (rating > 0){
-      await postReview( local.id ,rating , comment);
+      await postLocalReview( local.id ,rating , comment);
       setIsPosted(true);
       setSubmitted(true);
     } 

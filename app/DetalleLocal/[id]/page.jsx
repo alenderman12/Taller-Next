@@ -7,6 +7,8 @@ import ListadoRating from "../../../components/ListadoRating";
 import MenuListado from "../../../components/MenuListado";
 import Link from "next/link";
 import { Menu } from "@material-tailwind/react";
+import { Rating } from "@material-tailwind/react";
+import UserLink from "../../../components/UserLink";
 
 export default function DetalleLocal() {
     const { id } = useParams();
@@ -98,17 +100,52 @@ export default function DetalleLocal() {
                                     <p className="text-gray-600 leading-relaxed">{local.address}</p>
                                 </div>
                             </div>
+                            <div className="pl-8">
+                                <p className="text-sm font-bold text-gray-500 mb-4">
+                                    Creado por: <UserLink userName={local.creator.name} userId={local.creator.id} />
+                                </p>
+                            </div>
                         </div>
 
 
                         <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
-                            <h3 className="text-2xl font-black text-gray-900 mb-6">Menu</h3>
+                            <div className="flex justify-between items-center mb-8">
+                                <h3 className="text-2xl font-black text-gray-900 mb-6">Menu</h3>
+                                <Link href={`/AltaPlatillo/${id}`} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-all">
+                                    + Agregar Platillo
+                                </Link>
+                            </div>
                             <MenuListado localId={id} />
                         </div>
 
+                        {local.photos && local.photos.length > 1 && (
+                            <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
+                                <h3 className="text-2xl font-black text-gray-900 mb-6">Galería</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {local.photos.map((photo, index) => (
+                                        photo && (
+                                            <img
+                                                key={index}
+                                                src={photo}
+                                                alt={`Foto ${index + 1} de ${local.name}`}
+                                                className="h-32 md:h-48 w-full object-cover rounded-2xl border border-gray-100 shadow-sm hover:opacity-90 transition-opacity"
+                                            />
+                                        )
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
                             <h3 className="text-2xl font-black text-gray-900 mb-6">Lo que dicen los clientes</h3>
-                            <ListadoRating idLocal={id} />
+                            {local.ratingCount !== 0 && (
+                                <>
+                                    <Rating value={Math.round(local.ratingAverage)} readonly/>
+                                    <p className="text-gray-500 italic mb-6">({local.ratingAverage.toFixed(1)}/5.0 de {local.ratingCount} reseñas)</p>
+                                </>
+                            )}
+                            
+                            <ListadoRating localId={id} />
                         </div>
                     </div>
 

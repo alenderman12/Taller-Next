@@ -1,16 +1,17 @@
 'use client'
 import { use, useEffect, useState } from 'react';
-import { login } from '../api/api';
+import { register } from '../../api/api';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
+    await register(username, name, password);
     window.dispatchEvent(new Event('cambioSesion'));
     router.push("/ListadoPrincipal");
   };
@@ -26,9 +27,9 @@ export default function Home() {
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-gray-900">
-          Bienvenido de nuevo
+          Bienvenido a nuestra comunidad
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">Ingresa tus datos para continuar</p>
+        <p className="mt-2 text-center text-sm text-gray-600">Ingresa tus datos para crear tu cuenta</p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -40,6 +41,17 @@ export default function Home() {
                 <input
                   id="username" name="username" type="text" required
                   value={username} onChange={(e) => setUsername(e.target.value)}
+                  className="block w-full rounded-xl border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
+              <div className="mt-2">
+                <input
+                  id="name" name="name" type="text" required
+                  value={name} onChange={(e) => setName(e.target.value)}
                   className="block w-full rounded-xl border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-all"
                 />
               </div>

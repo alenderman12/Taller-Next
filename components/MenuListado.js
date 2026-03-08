@@ -16,32 +16,25 @@ const MenuListado = ({localId}) => {
         fetchDishes();
     }, [localId]);
 
-    return( <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
-        <div className="max-w-xl">
-          <h2 className="text-3xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-4xl">
-            Platillos
-          </h2>
+    if (!dishes || dishes.length === 0) {
+        return <p className="text-gray-500 italic">Aún no hay platillos para este local.</p>;
+    }
+
+    return (
+        <div className="mt-12">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {dishes.map((dish) => (
+                    <div key={dish.id} className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex flex-col">
+                            <h3 className="text-lg font-bold text-gray-900">{dish.name}</h3>
+                            <p className="mt-1 text-sm text-gray-500 line-clamp-2">{dish.description}</p>
+                            <span className="mt-2 font-semibold text-indigo-600">${dish.price}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
-        <ul role="list" className="grid gap-x-3 gap-y-12 sm:grid-cols-3 sm:gap-y-16 xl:col-span-2">
-          {dishes?.map((dish) => (
-            <li key={dish.id}>
-              <div className="flex items-center gap-x-6">
-                <img
-                  alt=""
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFv_rUJ2Ru3GR0Jxy2YTNH_jrVzX3_HY-THQ&s"
-                  className="size-16 rounded-full outline-1 -outline-offset-1 outline-black/5"
-                />
-                <div>
-                  <p className="text-sm/6 font-semibold text-indigo-600">{dish.name}</p>
-                  <p className="text-sm/6 font-semibold text-indigo-600">{dish.description}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>)
+    );
 }
 
 export default MenuListado;

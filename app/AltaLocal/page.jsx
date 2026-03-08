@@ -30,7 +30,6 @@ const AltaLocal = () => {
     const handleClick = (e) => {
         e.preventDefault();
         const hours = openHour + " - " + closeHour;
-        console.log(name, type, priceRange, city, zone, address, hours, photos);
         addLocal(name, type, priceRange, city, zone, address, hours, photos);
         router.push("/ListadoPrincipal");
     }

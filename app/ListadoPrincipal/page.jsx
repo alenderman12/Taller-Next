@@ -3,6 +3,21 @@ import { useState, useEffect } from "react";
 import { getLocals } from "../../api/api";
 import Link from "next/link";
 
+//Implemente un sistema de puntaje para que el listado de locales muestre primero los mejores locales (revisa si tiene fotos, su rating, si es una prueba, etc)
+
+const calcularPuntaje = (local) => {
+  let score = 0;
+
+  const nombre = local.name?.toLowerCase() || "";
+  if (nombre.includes("prueba") || nombre.includes("test")) return 0;
+  
+  if (local.photos && local.photos.length > 0) score += 50;
+  if (local.photos && local.photos.length > 1) score += 20;
+  score += 15 * (local.ratingAverage / 5 );
+
+  return score;
+};
+
 export default function ListadoPrincipal() {
   const [locals, setLocals] = useState([]);
   const [query, setQuery] = useState("");
@@ -15,6 +30,9 @@ export default function ListadoPrincipal() {
   useEffect(() => {
     const fetchLocals = async () => {
       const data = await getLocals(query, type, priceRange, rating, city, zone);
+
+      data.sort((a, b) => calcularPuntaje(b) - calcularPuntaje(a));
+
       setLocals(data);
     };
     fetchLocals();

@@ -1,37 +1,53 @@
 import { Rating } from "@material-tailwind/react";
+import { getLocalReviews } from "../api/api";
+import { useState, useEffect } from "react";
 
-const ListadoRating = ({reviews}) => {
+const ListadoRating = ({localId}) => {
 
+    const [reviews, setReviews] = useState([]);
 
-    return( <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
-        <div className="max-w-xl">
-          <h2 className="text-3xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-4xl">
-            Reseñas
-          </h2>
-          <p className="mt-6 text-lg/8 text-gray-600">
-            Conoce las reseñas de otros Usuarios
-          </p>
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const data = await getLocalReviews(localId);
+                setReviews(data);
+            } catch (error) {
+                console.error("Error al cargar las reseñas", error);
+            }
+        };
+        fetchReviews();
+    }, [localId]);
+
+    if (!reviews || reviews.length === 0) {
+        return <p className="text-gray-500 italic">Aún no hay reseñas para este local.</p>;
+    }
+
+    return (
+        <div className="mt-8">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                {reviews.map((review) => (
+                    <div key={review.id} className="rounded-2xl border border-gray-100 bg-gray-50 p-6 shadow-sm transition-all hover:bg-white hover:shadow-md">
+                        <div className="flex items-center gap-4 mb-4">
+                            <img
+                                alt="Avatar de usuario"
+                                src={"https://images.icon-icons.com/1863/PNG/512/person_118819.png"}
+                                className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-sm"
+                            />
+                            <div>
+                                <p className="text-sm font-bold text-gray-900">{review.user.name || "Usuario Anónimo"}</p>
+                                <div className="mt-1">
+                                    <Rating value={review.rating} readonly className="flex gap-1" />
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed italic">
+                            "{review.comment}"
+                        </p>
+                    </div>
+                ))}
+            </div>
         </div>
-        <ul role="list" className="grid gap-x-3 gap-y-12 sm:grid-cols-3 sm:gap-y-16 xl:col-span-2">
-          {reviews?.map((review) => (
-            <li key={review.id}>
-              <div className="flex items-center gap-x-6">
-                <img
-                  alt=""
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFv_rUJ2Ru3GR0Jxy2YTNH_jrVzX3_HY-THQ&s"
-                  className="size-16 rounded-full outline-1 -outline-offset-1 outline-black/5"
-                />
-                <div>
-                   <Rating value={review.rating} readonly />
-                  <p className="text-sm/6 font-semibold text-indigo-600">{review.comment}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>)
+    );
 }
 
 export default ListadoRating;

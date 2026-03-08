@@ -12,6 +12,11 @@ const register = async (username, name, password) => {
     const data = await response.json();
 
     console.log("[INFO : REGISTER]   ", data);
+    if(data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("name", data.user.name);
+        localStorage.setItem("id", data.user.id);
+    }
 }
 
 const login = async (username, password) => {
@@ -25,8 +30,9 @@ const login = async (username, password) => {
 
     console.log("[INFO : LOGIN]   ", data);
     if(data.token) {
-        console.log("asdasddasd");
         localStorage.setItem("token", data.token);
+        localStorage.setItem("name", data.user.name);
+        localStorage.setItem("id", data.user.id);
     }
 }
 
@@ -64,8 +70,8 @@ const getLocal = async (id) => {
     return data.item;
 }
 
-const getDishes = async (q="", category="", dateFrom="", dateTo="", zone="", localId="") => {
-    const response = await fetch(`${URL}/api/dishes?q=${q}&category=${category}&dateFrom=${dateFrom}&dateTo=${dateTo}&zone=${zone}&localId=${localId}`, {
+const getDishes = async (q="", category="", dateFrom="", dateTo="", city="", localId="") => {
+    const response = await fetch(`${URL}/api/dishes?q=${q}&category=${category}&dateFrom=${dateFrom}&dateTo=${dateTo}&city=${city}&localId=${localId}`, {
         method: "GET",
         headers: {"Content-Type" : "application/json"},
     })
@@ -98,7 +104,7 @@ const getDish = async (id) => {
     return data.item;
 }
 
-const postReview = async (localId, rating, comment) => {
+const postLocalReview = async (localId, rating, comment) => {
     const response = await fetch(`${URL}/api/locals/${localId}/reviews`, {
         method: "POST",
         headers: {"Content-Type" : "application/json", 'Authorization' : `Bearer ${localStorage.getItem("token")}`},
@@ -107,7 +113,33 @@ const postReview = async (localId, rating, comment) => {
 
     const data = await response.json();
 
-    console.log("[INFO : POST REVIEW]   ", data);
+    console.log("[INFO : POST LOCAL REVIEW]   ", data);
+}
+
+const getLocalReviews = async (id) => {
+    const response = await fetch(`${URL}/api/locals/${id}/reviews`, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+    })
+
+    const data = await response.json();
+
+    console.log("[INFO : GET LOCAL REVIEWS]   ", data);
+
+    return data.items;
+}
+
+const getUser = async (id) => {
+    const response = await fetch(`${URL}/api/users/${id}`, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+    })
+
+    const data = await response.json();
+
+    console.log("[INFO : GET USER]   ", data);
+
+    return data.item;
 }
 
 export {
@@ -119,5 +151,7 @@ export {
     getDishes,
     addDish,
     getDish,
-    postReview
+    postLocalReview,
+    getLocalReviews,
+    getUser
 }
