@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -9,17 +10,36 @@ export default function Header() {
   const [name, setName] = useState("");
   const [pfpName, setPfpName] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedId = localStorage.getItem('id');
-    const storedName = localStorage.getItem('name');
-    
-    setId(storedId);
-    setName(storedName);
-    setPfpName(storedName?.replaceAll(' ', '+'));
-    setIsLoggedIn(!!token);
+    const actualizarEstado = () => {
+      const token = localStorage.getItem('token');
+      const storedId = localStorage.getItem('id');
+      const storedName = localStorage.getItem('name');
+      
+      setId(storedId);
+      setName(storedName);
+      setPfpName(storedName?.replaceAll(' ', '+'));
+      setIsLoggedIn(!!token && token !== "");
+    };
+
+    actualizarEstado();
+    window.addEventListener('cambioSesion', actualizarEstado);
+
+    return () => {
+      window.removeEventListener('cambioSesion', actualizarEstado);
+    };
   }, []);
+
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
+    window.dispatchEvent(new Event('cambioSesion'));
+    router.push('/');
+  };
   
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -65,10 +85,7 @@ export default function Header() {
                 Mi Perfil
               </Link>
               <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  window.location.href = '/';
-                }}
+                onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 font-medium"
               >
                 Cerrar Sesión

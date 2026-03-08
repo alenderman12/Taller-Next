@@ -59,7 +59,7 @@ export default function ListadoPrincipal() {
               <div key={field.id}>
                 <label htmlFor={field.id} className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{field.label}</label>
                 <input
-                  id={field.id} type={field.type} value={field.value} onChange={(e) => field.setter(e.target.value)}
+                  id={field.id} type={field.type} {...(field.type === "number" ? { min: 0, max: 5 } : {})} value={field.value} onChange={(e) => field.setter(e.target.value)}
                   className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 px-4 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all sm:text-sm text-black border outline-none"
                 />
               </div>

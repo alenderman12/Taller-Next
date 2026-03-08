@@ -2,17 +2,24 @@
 import { use, useEffect, useState } from 'react';
 import { login } from '../api/api';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    window.dispatchEvent(new Event('cambioSesion'));
-    router.push("/ListadoPrincipal");
+    setError("");
+    const success = await login(username, password);
+    if (success) {
+      window.dispatchEvent(new Event('cambioSesion'));
+      router.push("/ListadoPrincipal");
+    } else {
+      setError("Usuario o contraseña incorrectos. Por favor, intentá de nuevo.");
+    }
   };
 
   useEffect(() => {
@@ -34,6 +41,11 @@ export default function Home() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl shadow-gray-200/50 sm:rounded-2xl sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-xl bg-red-50 p-4 border border-red-200">
+                <p className="text-sm font-medium text-red-800">{error}</p>
+              </div>
+            )}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario</label>
               <div className="mt-2">
@@ -55,6 +67,8 @@ export default function Home() {
                 />
               </div>
             </div>
+
+            <span className='block text-sm font-medium text-gray-700'>No tienes una cuenta? <Link href="/Registrarse" className="text-indigo-600 hover:text-indigo-500">Regístrate aquí</Link></span>
 
             <div>
               <button

@@ -3,23 +3,28 @@ import { use, useEffect, useState } from 'react';
 import { register } from '../../api/api';
 import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function Registrarse() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(username, name, password);
-    window.dispatchEvent(new Event('cambioSesion'));
-    router.push("/ListadoPrincipal");
+    const success = await register(username, name, password);
+    if (success) {
+      window.dispatchEvent(new Event('cambioSesion'));
+      router.push("/ListadoPrincipal");
+    } else {
+      setError("El usuario ya existe o hubo un error. Por favor, intentá de nuevo.");
+    }
   };
 
   useEffect(() => {
-    const token = localStorage.setItem("token", "");
-    const name = localStorage.setItem("name", "");
-    const id = localStorage.setItem("id", "");
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("id");
     window.dispatchEvent(new Event('cambioSesion'));
   }, []);
 
@@ -35,6 +40,11 @@ export default function Home() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl shadow-gray-200/50 sm:rounded-2xl sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-xl bg-red-50 p-4 border border-red-200">
+                <p className="text-sm font-medium text-red-800">{error}</p>
+              </div>
+            )}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario</label>
               <div className="mt-2">
